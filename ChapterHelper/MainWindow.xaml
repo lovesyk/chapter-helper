@@ -1,0 +1,169 @@
+﻿<Controls:MetroWindow x:Class="ChapterHelper.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns:local="clr-namespace:ChapterHelper"
+        mc:Ignorable="d"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
+        xmlns:p="clr-namespace:ChapterHelper.Properties"
+        xmlns:c="clr-namespace:ChapterHelper.Converter"
+        Title="{x:Static p:Resources.AppTitle}" Height="480" Width="854"
+        TitleCaps="False" >
+    <Window.Resources>
+        <c:PositiveIntToStringConverter x:Key="PositiveIntToStringConverter" />
+        <c:PositiveFractionToStringConverter x:Key="PositiveFractionToStringConverter" />
+        <c:PreciseTimeSpanToStringConverter x:Key="PreciseTimeSpanToStringConverter" />
+    </Window.Resources>
+    <Controls:MetroWindow.RightWindowCommands>
+        <Controls:WindowCommands>
+            <ToggleButton
+                Content="{x:Static p:Resources.Settings}"    
+                IsChecked="{Binding ElementName=settingsFlyout, Path=IsOpen}"
+                Cursor="Hand"
+                />
+        </Controls:WindowCommands>
+    </Controls:MetroWindow.RightWindowCommands>
+    <Grid>
+        <DockPanel>
+        <StackPanel
+            Orientation="Horizontal"
+            Margin="10"
+            DockPanel.Dock="Top" >
+            <Button
+                Content="{x:Static p:Resources.LoadFromTrims}"
+                Click="LoadFromTrims_Click"
+                />
+        </StackPanel>
+        <DockPanel>
+            <StackPanel
+                Orientation="Horizontal"
+                Margin="10"
+                DockPanel.Dock="Bottom"
+                >
+                <Button
+                    Content="{x:Static p:Resources.SplitFile}"
+                    Click="SplitFile_Click"
+                    />
+                <Button
+                    Content="{x:Static p:Resources.ExportChapters}"
+                    Margin="10,0,0,0"
+                    Click="ExportChapters_Click"
+                    />
+                <Button
+                    Content="{x:Static p:Resources.ExportTimecodes}"
+                    Margin="10,0,0,0"
+                    Click="ExportTimecodes_Click"
+                    />
+                <Button
+                    Content="{x:Static p:Resources.ExportQpFile}"
+                    Margin="10,0,0,0"
+                    Click="ExportQpFile_Click"
+                    />
+            </StackPanel>
+            <DataGrid
+                x:Name="ChapterDataGrid"
+                ItemsSource="{Binding Chapters}"
+                AutoGenerateColumns="False"
+                CanUserAddRows="False"
+                DockPanel.Dock="Top"
+                >
+                <DataGrid.Columns>
+                    <DataGridTextColumn
+                        Header="{x:Static p:Resources.InputFirstFrame}"
+                        Width="*"
+                        Binding="{Binding InputFirstFrame, Mode=TwoWay, Converter={StaticResource PositiveIntToStringConverter}}"
+                        />
+                    <DataGridTextColumn
+                        Header="{x:Static p:Resources.InputLastFrame}"
+                        Width="*"
+                        Binding="{Binding InputLastFrame, Mode=TwoWay, Converter={StaticResource PositiveIntToStringConverter}}"
+                        />
+                    <DataGridTextColumn
+                        Header="{x:Static p:Resources.InputFrameRate}"
+                        Width="*"
+                        Binding="{Binding InputFrameRate, Mode=TwoWay, Converter={StaticResource PositiveFractionToStringConverter}}"
+                        />
+                    <DataGridTextColumn
+                        Header="{x:Static p:Resources.InputStartTime}"
+                        Width="*"
+                        Binding="{Binding InputStartTime, Converter={StaticResource PreciseTimeSpanToStringConverter}}"
+                        IsReadOnly="True"
+                        />
+                    <DataGridTextColumn
+                        Header="{x:Static p:Resources.InputEndTime}"
+                        Width="*"
+                        Binding="{Binding InputEndTime, Converter={StaticResource PreciseTimeSpanToStringConverter}}"
+                        IsReadOnly="True"
+                        />
+                    <DataGridTextColumn
+                        Header="{x:Static p:Resources.InputDuration}"
+                        Width="*"
+                        Binding="{Binding InputDuration, Converter={StaticResource PreciseTimeSpanToStringConverter}}"
+                        IsReadOnly="True"
+                        />
+                    <DataGridTextColumn
+                        Header="{x:Static p:Resources.OutputFirstFrame}"
+                        Width="*"
+                        Binding="{Binding OutputFirstFrame, Mode=TwoWay, Converter={StaticResource PositiveIntToStringConverter}}"
+                        />
+                    <DataGridTextColumn
+                        Header="{x:Static p:Resources.OutputLastFrame}"
+                        Width="*"
+                        Binding="{Binding OutputLastFrame, Converter={StaticResource PositiveIntToStringConverter}}"
+                        IsReadOnly="True"
+                        />
+                    <DataGridTextColumn
+                        Header="{x:Static p:Resources.OutputFrameRate}"
+                        Width="*"
+                        Binding="{Binding OutputFrameRate, Mode=TwoWay, Converter={StaticResource PositiveFractionToStringConverter}}"
+                        />
+                    <DataGridTextColumn
+                        Header="{x:Static p:Resources.OutputStartTime}"
+                        Width="*"
+                        Binding="{Binding OutputStartTime, Converter={StaticResource PreciseTimeSpanToStringConverter}}"
+                        IsReadOnly="True"
+                        />
+                    <DataGridTextColumn
+                        Header="{x:Static p:Resources.OutputEndTime}"
+                        Width="*"
+                        Binding="{Binding OutputEndTime, Converter={StaticResource PreciseTimeSpanToStringConverter}}"
+                        IsReadOnly="True"
+                        />
+                    <DataGridTextColumn
+                        Header="{x:Static p:Resources.OutputDuration}"
+                        Width="*"
+                        Binding="{Binding OutputDuration, Converter={StaticResource PreciseTimeSpanToStringConverter}}"
+                        IsReadOnly="True"
+                        />
+                    <DataGridTextColumn
+                        Header="{x:Static p:Resources.Name}"
+                        Width="*"
+                        Binding="{Binding Name, Mode=TwoWay}"
+                        />
+                </DataGrid.Columns>
+                <DataGrid.ContextMenu>
+                    <ContextMenu >
+                        <MenuItem Header="{x:Static p:Resources.AddChapter}" Click="AddChapter_Click" />
+                        <MenuItem Header="{x:Static p:Resources.RemoveChapter}" Click="RemoveChapter_Click" />
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
+            </DataGrid>
+        </DockPanel>
+        </DockPanel>
+    </Grid>
+    <Controls:MetroWindow.Flyouts>
+        <Controls:FlyoutsControl>
+            <Controls:Flyout x:Name="settingsFlyout" Header="{x:Static p:Resources.Settings}" Position="Right" Width="427">
+                <StackPanel Orientation="Vertical" Margin="10">
+                    <Label Content="{x:Static p:Resources.MkvToolNixDirectory}" FontSize="{DynamicResource SubHeaderFontSize}" FontFamily="{DynamicResource HeaderFontFamily}" />
+                    <Grid Margin="10 0 0 0">
+                        <TextBox Text="{Binding MkvToolNix.Root}" VerticalAlignment="Top"/>
+                        <Button Content="{x:Static p:Resources.Browse}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,0,10" Click="SetMkvToolNixRoot_Click"/>
+                    </Grid>
+                </StackPanel>
+            </Controls:Flyout>
+        </Controls:FlyoutsControl>
+    </Controls:MetroWindow.Flyouts>
+</Controls:MetroWindow>
