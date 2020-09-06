@@ -1,25 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Windows.Data;
 
 namespace ChapterHelper
 {
-    public class ChapterCollection : BindingList<Chapter>
+    public class ChapterCollection : ObservableCollection<Chapter>
     {
-        /// <summary>
-        /// Force reload of list on every update.
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnListChanged(ListChangedEventArgs e)
-        {
-            base.OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, 0));
-        }
-
         /// <summary>
         /// Fetches a chapter with a position relative to a specified one.
         /// </summary>

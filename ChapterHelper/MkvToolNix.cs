@@ -117,12 +117,7 @@ namespace ChapterHelper
         /// <returns>Escaped string</returns>
         private string EscapeOptionsFileString(string input)
         {
-            return input
-                .Replace(@"\", @"\\")
-                .Replace(" ", @"\s")
-                .Replace("\"", @"\2")
-                .Replace(":", @"\c")
-                .Replace("#", @"\h");
+            return input.Replace(@"\", @"\\");
         }
 
         /// <summary>
@@ -148,10 +143,11 @@ namespace ChapterHelper
             string optionsFile = Path.GetTempFileName();
             using (StreamWriter trimMuxFileWriter = new StreamWriter(optionsFile))
             {
-                trimMuxFileWriter.WriteLine("-o");
-                trimMuxFileWriter.WriteLine(EscapeOptionsFileString(destination));
-                trimMuxFileWriter.WriteLine("--split");
-                trimMuxFileWriter.Write("parts:");
+                trimMuxFileWriter.WriteLine("[");
+                trimMuxFileWriter.WriteLine("\"-o\",");
+                trimMuxFileWriter.WriteLine("\"" + EscapeOptionsFileString(destination) + "\",");
+                trimMuxFileWriter.WriteLine("\"--split\",");
+                trimMuxFileWriter.Write("\"parts:");
                 List<string> parts = new List<string>();
                 foreach (Chapter chapter in chapters)
                 {
@@ -160,13 +156,14 @@ namespace ChapterHelper
                     string part  = $"{start}-{end}";
                     parts.Add(part);
                 }
-                trimMuxFileWriter.WriteLine(String.Join(",+", parts));
+                trimMuxFileWriter.WriteLine(String.Join(",+", parts) + "\",");
                 if ((int)delay.TotalMilliseconds != 0)
                 {
-                    trimMuxFileWriter.WriteLine("-y");
-                    trimMuxFileWriter.WriteLine("-1:" + (int)delay.TotalMilliseconds);
+                    trimMuxFileWriter.WriteLine("\"-y\",");
+                    trimMuxFileWriter.WriteLine("\"-1:" + (int)delay.TotalMilliseconds + "\",");
                 }
-                trimMuxFileWriter.WriteLine(EscapeOptionsFileString(source));
+                trimMuxFileWriter.WriteLine("\"" + EscapeOptionsFileString(source) + "\"");
+                trimMuxFileWriter.WriteLine("]");
             }
             return optionsFile;
         }

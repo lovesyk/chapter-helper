@@ -110,6 +110,17 @@ namespace ChapterHelper
             return tcs.Task;
         }
 
-        public string Input { get; set; } = String.Empty;
+        private string input = String.Empty;
+        public string Input
+        {
+            get
+            {
+                return input;
+            }
+            set
+            {
+                input = value;
+            }
+        }
     }
 }

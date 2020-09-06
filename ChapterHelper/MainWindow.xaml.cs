@@ -24,12 +24,12 @@ namespace ChapterHelper
             MkvToolNix = new MkvToolNix();
             MkvToolNix.Setup();
             InitializeComponent();
-            /*ChapterDataGrid.row += (sender, e) =>
+            ChapterDataGrid.CurrentCellChanged += (sender, e) =>
             {
-                //terDataGrid.ItemsSource = null;
-                //ChapterDataGrid.ItemsSource = Chapters;
-                ChapterDataGrid.Items.Refresh();
-            };*/
+                var context = ChapterDataGrid.DataContext;
+                ChapterDataGrid.DataContext = null;
+                ChapterDataGrid.DataContext = context;
+            };
         }
 
         /// <summary>
@@ -118,23 +118,19 @@ namespace ChapterHelper
             }
 
             // let user customize split settings
-            SplitFileSettingsDialog content = new SplitFileSettingsDialog
+            SplitFileSettingsDialog splitFileSettingsDialog = new SplitFileSettingsDialog
             {
                 Delay = GetDelayFromFileName(sourceDialog.FileName)
             };
-            var dialog = new CustomDialog
-            {
-                Title = Properties.Resources.SplitFileSettingsDialogHeader,
-                Content = content
-            };
-            await this.ShowMetroDialogAsync(dialog);
-            bool result = await content.WaitForButtonPressAsync();
-            await this.HideMetroDialogAsync(dialog);
-            if (!result)
+            await this.ShowMetroDialogAsync(splitFileSettingsDialog);
+            SplitFileSettingsDialog.MessageDialogResult splitFileSettingsDialogResult =
+                await splitFileSettingsDialog.WaitForButtonPressAsync();
+            await this.HideMetroDialogAsync(splitFileSettingsDialog);
+            if (splitFileSettingsDialogResult == SplitFileSettingsDialog.MessageDialogResult.Negative)
             {
                 return;
             }
-            PreciseTimeSpan delay = content.Delay;
+            PreciseTimeSpan delay = splitFileSettingsDialog.Delay;
 
             // let user set the destination path
             SaveFileDialog destinationDialog = new SaveFileDialog
